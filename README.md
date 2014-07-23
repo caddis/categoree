@@ -98,7 +98,7 @@ As with any tag pair, this allows you to remove your separator(s) (such as a com
 
 Some of these examples may be a bit simple, but should demonstrate how powerful the tags are and how easy it is to control the markup.
 
-### Get the name of a category by ID with the single tag:
+### Get the name of a category by ID with the single tag
 
 	{exp:categoree:single show="82"}
 
