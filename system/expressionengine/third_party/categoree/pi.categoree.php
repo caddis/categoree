@@ -5,7 +5,7 @@ $plugin_info = array (
 	'pi_version' => '2.0.0',
 	'pi_author' => 'Caddis (TJ Draper)',
 	'pi_author_url' => 'http://www.caddis.co',
-	'pi_description' => 'A lightweight plugin to retrieve category data in a sane manner.',
+	'pi_description' => 'Retrieve category data in a sane manner.',
 	'pi_usage' => Categoree::usage()
 );
 
@@ -45,7 +45,7 @@ class Categoree {
 			'category_name',
 			'category_url_title',
 			'category_description',
-			'parent_id'
+			'category_parent_id'
 		);
 
 		if (empty($this->cat_ids) or ! in_array($this->field, $allowed_fields)) {
@@ -291,85 +291,7 @@ class Categoree {
 	{
 		ob_start();
 ?>
-Categoree 2.0.0 for ExpressionEngine
-Retrieve category data in a sane manner.
-
-PURPOSE
-Let's face it, the native ExpressionEngine channel categories tag kind of sucks. It's nearly impossible to control the markup of the nested tag (no, actually, it is impossible), and with the linear option invoked, you can't get children without parents.
-
-This plugin offers you a way to get categories on your terms, with your markup, in a way that suites you best.
-
-SINGLE TAG
-{exp:categoree:single show="1"}
-
-Use:
-Get the name, url_title, or description of a single category by ID.
-
-Parameters:
-
-show=""
-Required. This is the category ID of the category you wish to get data from.
-
-field=""
-Optional: default is category_name. This allows you to choose which category field data to retrieve.
-
-Possible values: category_name, category_url_title, category_description, or parent_id.
-
-TAG PAIR
-
-Use:
-Loop through categories and display id, name, url_title, description, or parent id of the category.
-
-Note when using the show parameter without nesting, this will get the specified category ID REGARDLESS of the category hierarchy!
-
-Parameters
-
-show=""
-Optional: default is all categories.
-
-Value: Category ID or IDs of the category or categories you wish to get data from.
-
-group=""
-Optional: default is all groups.
-
-Value: Pipe separated list of group IDs to get categories from.
-
-parent_only="yes"
-Optional: default is false
-
-Display only parent categories. Cannot be used with the nesting parameter since nesting would not apply.
-
-parent_id=""
-Optional: default is false.
-
-Display only the children of a specified parent ID. Cannot be used with the parent_only parameter, or the nest parameter.
-
-nest="3"
-Optional: Integer. Default is false.
-
-Makes additional tags available for category nesting and set the level of nesting (see below).
-
-namespace="my_namespace"
-Namespace all tags to prevent conflicts with parent tags. So {category_name} becomes {my_namespace:category_name}
-
-backspace=""
-As with any tag pair, this allows you to remove your separator(s) (such as a comma) from the last result.
-
-Variables available inside the tag pair (not nested):
-{category_id}
-{category_name}
-{category_url_title}
-{category_description}
-{category_parent_id}
-
-Additional variables when using nesting
-{level} (integer)
-{level_count} (integer)
-{level_start} (boolean)
-{level_end} (boolean)
-{level_total_results} (integer)
-
-See examples on GitHub:
+See docs and examples on GitHub:
 https://github.com/caddis/categoree
 <?php
 		$buffer = ob_get_contents();
