@@ -4,7 +4,7 @@ Retrieve category data in a sane manner.
 
 ## Purpose
 
-Let's face it, the native ExpressionEngine channel categories tag kind of sucks. It's nearly impossible to control the markup of the nested tag (no, actually, it **is** impossible), and with the linear option invoked, you can't get children without parents.
+ExpressionEngine is good, but sometimes that channel categories tag can be a bit limiting. There's not a lot of controlling the markup when outputting nested categories from the native tag. And you can't get children without parents.
 
 This plugin offers you a way to get categories on your terms, with your markup, in a way that suites you best.
 
@@ -14,7 +14,7 @@ This plugin offers you a way to get categories on your terms, with your markup, 
 
 ### Use
 
-Get the name, url_title, or description of a single category by ID.
+Get the category_name, category_url_title, category_description, or category_parent_id of a single category by ID.
 
 ### Parameters
 
@@ -26,7 +26,7 @@ Required. This is the category ID of the category you wish to get data from.
 
 Optional: default is category_name. This allows you to choose which category field data to retrieve.
 
-Possible values: category_name, category_url_title, category_description, or parent_id.
+Possible values: category_name, category_url_title, category_description, or category_parent_id.
 
 ## Tag Pair
 
@@ -34,7 +34,7 @@ Possible values: category_name, category_url_title, category_description, or par
 
 ### Use
 
-Loop through categories and display id, name, url_title, description, or parent id of the category.
+Loop through categories and display category_id, category_name, category_url_title, category_description, or category_parent_id.
 
 Note when using the show parameter without nesting, this will get the specified category ID REGARDLESS of the category hierarchy!
 
@@ -112,7 +112,7 @@ Some of these examples may be a bit simple, but should demonstrate how powerful 
 		{exp:categoree:pair group="21" nest="10" namespace="categoree"}
 			{if categoree:level != 1 AND categoree:level_start}
 			<li>
-			<ul class="level-{categoree:level}" style="margin-left: 4px;">
+			<ul class="level-{categoree:level}">
 			{/if}
 				<li>{categoree:category_name}</li>
 			{if categoree:level != 1 AND categoree:level_end}
