@@ -1,6 +1,12 @@
-# Categoree 1.1.0 for ExpressionEngine
+# Categoree 2.0.0 for ExpressionEngine
 
-A lightweight plugin to retrieve category data in a sane manner.
+Retrieve category data in a sane manner.
+
+## Purpose
+
+Let's face it, the native ExpressionEngine channel categories tag kind of sucks. It's nearly impossible to control the markup of the nested tag (no, actually, it **is** impossible), and with the linear option invoked, you can't get children without parents.
+
+This plugin offers you a way to get categories on your terms, with your markup, in a way that suites you best.
 
 ## Single Tag
 
@@ -18,11 +24,9 @@ Required. This is the category ID of the category you wish to get data from.
 
 	field=""
 
-Optional: default is category_name.
+Optional: default is category_name. This allows you to choose which category field data to retrieve.
 
-Value: category_name, category_url_title, or category_description.
-
-This allows you to choose which category field data to retrieve.
+Possible values: category_name, category_url_title, category_description, or parent_id.
 
 ## Tag Pair
 
@@ -30,7 +34,9 @@ This allows you to choose which category field data to retrieve.
 
 ### Use
 
-Loop through categories and display name, url_title, or description of the category. This will get the specified category ID REGARDLESS of the category hierarchy!
+Loop through categories and display id, name, url_title, description, or parent id of the category.
+
+Note when using the show parameter without nesting, this will get the specified category ID REGARDLESS of the category hierarchy!
 
 ### Parameters
 
@@ -42,7 +48,7 @@ Value: Category ID or IDs of the category or categories you wish to get data fro
 
 	group=""
 
-Optional: default is all categories.
+Optional: default is all groups.
 
 Value: Pipe separated list of group IDs to get categories from.
 
@@ -50,19 +56,29 @@ Value: Pipe separated list of group IDs to get categories from.
 
 Optional: default is false
 
-Display only parent categories.
+Display only parent categories. Cannot be used with the nesting parameter since nesting would not apply.
 
 	parent_id=""
 
-Optional: default is false. The parent_only="yes" parameter will override this one.
+Optional: default is false.
 
-Display only the children of a specified parent ID.
+Display only the children of a specified parent ID. Cannot be used with the parent_only parameter, or the nest parameter.
+
+	nest="3"
+
+Optional: Integer. Default is false.
+
+Makes additional tags available for category nesting and set the level of nesting (see below).
+
+	namespace="my_namespace"
+
+Namespace all tags to prevent conflicts with parent tags. So {category_name} becomes {my_namespace:category_name}
 
 	backspace=""
 
 As with any tag pair, this allows you to remove your separator(s) (such as a comma) from the last result.
 
-### Variables available inside the tag pair
+### Variables available inside the tag pair (not nested)
 
 	{category_id}
 	{category_name}
@@ -70,73 +86,53 @@ As with any tag pair, this allows you to remove your separator(s) (such as a com
 	{category_description}
 	{category_parent_id}
 
-## Nested Tag Pair
+### Additional variables when using nesting
 
-	{exp:categoree:nested group="21"}
-		<ul>
-			{category_name}
-			{children}
-				{if child:count == 1}</ul>{/if}
-					<li>{child:category_name}</li>
-				{if child:count == child:total_results}
-			{/children}
-		</ul>
-	{/exp:category:nested}
+	{level} (integer)
+	{level_count} (integer)
+	{level_start} (boolean)
+	{level_end} (boolean)
+	{level_total_results} (integer)
 
-### Use
+## Examples
 
-Loop through categories and the their direct children to display name, url_title, or description in a nested hierarchy where you are in FULL control of the markup!
+Some of these examples may be a bit simple, but should demonstrate how powerful the tags are and how easy it is to control the markup.
 
-### Parameters
+### Get the name of a category by ID with the single tag:
 
-	show=""
+	{exp:categoree:single show="82"}
 
-Optional: default is all categories.
+### Loop through the names of a category group
 
-Value: Category ID or IDs of the category or categories you wish to get data from.
+	{exp:categoree:pair group="21" parent_only="yes" backspace="2"}{category_name}, {/exp:categoree:pair}
 
-	group=""
+### Simple nesting with namespacing
 
-Optional: default is all categories.
+	<ul>
+		{exp:categoree:pair group="21" nest="10" namespace="categoree"}
+			{if categoree:level != 1 AND categoree:level_start}
+			<li>
+			<ul class="level-{categoree:level}" style="margin-left: 4px;">
+			{/if}
+				<li>{categoree:category_name}</li>
+			{if categoree:level != 1 AND categoree:level_end}
+			</ul>
+			</li>
+			{/if}
+		{/exp:categoree:pair}
+	</ul>
 
-Value: Pipe separated list of group IDs to get categories from.
+### 2 Level Nesting with top level as a heading
 
-	backspace=""
-
-As with any tag pair, this allows you to remove your separator(s) (such as a comma) from the last result.
-
-### Variables available inside the tag pair
-
-	{category_id}
-	{category_name}
-	{category_url_title}
-	{category_description}
-	{category_parent_id}
-	{child:total_results}
-
-### Variable pairs available inside the tag pair
-
-	{children}
-		{child:count}
-		{child:total_results}
-		{child:category_id}
-		{child:category_name}
-		{child:category_url_title}
-		{child:category_description}
-		{child:category_parent_id}
-		{child:child:total_results}
-	{/children}
-
-## Prefixing
-
-All tag pairs can use the prefixing parameter:
-
-	prefix="my_prefix"
-
-This can prevent running into conflicts with parent tags and other unfortunate things. Here's an example:
-
-	{exp:categoree:pair group="21" prefix="categoree"}
-		{categoree:category_name}<br>
+	{exp:categoree:pair group="21" nest="2"}
+		{if level == 1}
+			<h3>{category_name}</h3>
+		{/if}
+		{if level == 2}
+			{if level_count == 1}<ul>{/if}
+				<li><a href="/downloads/{category_url_title}">{category_name}</a></li>
+			{if level_count == level_total_results}</ul>{/if}
+		{/if}
 	{/exp:categoree:pair}
 
 ## License
