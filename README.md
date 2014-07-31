@@ -46,6 +46,10 @@ Optional: default is all categories.
 
 Value: Category ID or IDs of the category or categories you wish to get data from.
 
+	fixed="yes"
+
+Use in conjunction with the "show" parameter. This will display catetories in exactly the order you have specified the category IDs in the show parameter. Default sorting is by group and category order.
+
 	group=""
 
 Optional: default is all groups.

@@ -31,6 +31,7 @@ class Categoree {
 		$this->parent_id = ee()->TMPL->fetch_param('parent_id');
 		$this->namespace = ee()->TMPL->fetch_param('namespace');
 		$this->nest = ee()->TMPL->fetch_param('nest');
+		$this->fixed = ee()->TMPL->fetch_param('fixed');
 	}
 
 	/**
@@ -97,6 +98,8 @@ class Categoree {
 		// Nest items if nest parameter is set
 		if (! empty($this->nest) && empty($this->parent_only)) {
 			$cat_data = $this->nest_cats($cat_data, $this->nest);
+		} else if ($this->fixed === 'yes' && ! empty($this->cat_ids)) {
+			$cat_data = $this->fixed_order($cat_data, explode('|', $this->cat_ids));
 		}
 
 		// Namespace tags if parameter is set
@@ -285,6 +288,33 @@ class Categoree {
 
 		// Glue them back together and return
 		return array_merge($start, $end);
+	}
+
+	/**
+	 * Order categories based on the order specified
+	 *
+	 * @param array $cat_data - The tag data array
+	 * @param array $cat_ids - Array of category ids order
+	 *
+	 * @return Array
+	 */
+	private function fixed_order($cat_data, $cat_ids)
+	{
+		$return_data = array();
+
+		foreach ($cat_ids as $cat_id) {
+			foreach ($cat_data as $cat_key => $cat_value) {
+				if ($cat_id === $cat_value['category_id']) {
+					$return_data[] = $cat_value;
+
+					unset($cat_data[$cat_key]);
+
+					break;
+				}
+			}
+		}
+
+		return $return_data;
 	}
 
 	function usage()
