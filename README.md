@@ -1,4 +1,4 @@
-# Categoree 2.0.0 for ExpressionEngine
+# Categoree 1.1.0 for ExpressionEngine
 
 Retrieve category data in a sane manner.
 

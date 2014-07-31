@@ -59,7 +59,7 @@ class Categoree_model extends CI_Model {
 			->order_by('group_id, parent_id, cat_order')
 			->get();
 
-		return $this->build_result_array($query->result());
+		return $this->_build_result_array($query->result());
 	}
 
 	/**
@@ -69,7 +69,7 @@ class Categoree_model extends CI_Model {
 	 *
 	 * @return Array
 	 */
-	private function build_result_array($query_data)
+	private function _build_result_array($query_data)
 	{
 		$result = array();
 

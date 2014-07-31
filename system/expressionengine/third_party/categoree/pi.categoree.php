@@ -2,7 +2,7 @@
 
 $plugin_info = array (
 	'pi_name' => 'Categoree',
-	'pi_version' => '2.0.0',
+	'pi_version' => '1.1.0',
 	'pi_author' => 'Caddis (TJ Draper)',
 	'pi_author_url' => 'http://www.caddis.co',
 	'pi_description' => 'Retrieve category data in a sane manner.',
@@ -96,15 +96,15 @@ class Categoree {
 		$cat_data = ee()->categoree_model->get_cat_data($this->model_options);
 
 		// Nest items if nest parameter is set
-		if (! empty($this->nest) && empty($this->parent_only)) {
-			$cat_data = $this->nest_cats($cat_data, $this->nest);
-		} else if ($this->fixed === 'yes' && ! empty($this->cat_ids)) {
-			$cat_data = $this->fixed_order($cat_data, explode('|', $this->cat_ids));
+		if (! empty($this->nest) and empty($this->parent_only)) {
+			$cat_data = $this->_nest_cats($cat_data, $this->nest);
+		} else if ($this->fixed === 'yes' and ! empty($this->cat_ids)) {
+			$cat_data = $this->_fixed_order($cat_data, explode('|', $this->cat_ids));
 		}
 
 		// Namespace tags if parameter is set
 		if ($this->namespace != false) {
-			$cat_data = $this->namespace_items($cat_data, $this->namespace);
+			$cat_data = $this->_namespace_items($cat_data, $this->namespace);
 		}
 
 		if (! empty($cat_data)) {
@@ -120,7 +120,7 @@ class Categoree {
 	 *
 	 * @return Array - Namespaced keys on the tag data input array
 	 */
-	private function namespace_items($cat_data, $namespace)
+	private function _namespace_items($cat_data, $namespace)
 	{
 		$result = array();
 
@@ -139,7 +139,7 @@ class Categoree {
 	 *
 	 * @return Array
 	 */
-	private function nest_cats($cat_data, $nest)
+	private function _nest_cats($cat_data, $nest)
 	{
 		$nested_cats = array();
 
@@ -166,7 +166,7 @@ class Categoree {
 
 			$value['level_end'] = false;
 
-			if ($key === 0 && $key === ($level_count - 1)) {
+			if ($key === 0 and $key === ($level_count - 1)) {
 				$value['level_start'] = true;
 				$value['level_end'] = true;
 			} else if ($key === 0) {
@@ -180,7 +180,7 @@ class Categoree {
 
 		// Go to the recursive nesting function to finish build out
 		if ($nest > 1) {
-			$nested_cats = $this->recursive_nesting(
+			$nested_cats = $this->_recursive_nesting(
 				$nested_cats,
 				$cat_data,
 				1,
@@ -196,7 +196,7 @@ class Categoree {
 	 *
 	 * @return Array
 	 */
-	private function recursive_nesting($nested_cats, $cat_data, $level, $nest)
+	private function _recursive_nesting($nested_cats, $cat_data, $level, $nest)
 	{
 		$level_build = array();
 
@@ -230,7 +230,7 @@ class Categoree {
 
 				$value['level_end'] = false;
 
-				if ($key === 0 && $key === ($level_count - 1)) {
+				if ($key === 0 and $key === ($level_count - 1)) {
 					$value['level_start'] = true;
 					$value['level_end'] = true;
 				} else if ($key === 0) {
@@ -243,7 +243,7 @@ class Categoree {
 			}
 
 			// Insert the built level into the nested cats array
-			$nested_cats = $this->insert_array_index(
+			$nested_cats = $this->_insert_array_index(
 				$nested_cats,
 				$level_build,
 				($nested_key + 1) + ($previous_level_count)
@@ -261,8 +261,8 @@ class Categoree {
 
 		// If the categories are not empty, and nest param is great than current
 		// level, recursions is
-		if (! empty($cat_data) && $nest > $level) {
-			$nested_cats = $this->recursive_nesting($nested_cats, $cat_data, $level, $nest);
+		if (! empty($cat_data) and $nest > $level) {
+			$nested_cats = $this->_recursive_nesting($nested_cats, $cat_data, $level, $nest);
 		}
 
 		return $nested_cats;
@@ -273,7 +273,7 @@ class Categoree {
 	 *
 	 * @return Array
 	 */
-	private function insert_array_index($array, $new_element, $index)
+	private function _insert_array_index($array, $new_element, $index)
 	{
 		// Get the start of the array
 		$start = array_slice($array, 0, $index);
@@ -298,7 +298,7 @@ class Categoree {
 	 *
 	 * @return Array
 	 */
-	private function fixed_order($cat_data, $cat_ids)
+	private function _fixed_order($cat_data, $cat_ids)
 	{
 		$return_data = array();
 
