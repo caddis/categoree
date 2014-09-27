@@ -1,4 +1,4 @@
-# Categoree 1.1.0 for ExpressionEngine
+# Categoree 1.2.0 for ExpressionEngine
 
 Retrieve category data in a sane manner.
 
@@ -45,6 +45,12 @@ Note when using the show parameter without nesting, this will get the specified 
 Optional: default is all categories.
 
 Value: Category ID or IDs of the category or categories you wish to get data from.
+
+	entry_id=""
+
+Optional: default is false.
+
+Value: Entry ID of the the entry you would like to get categories for.
 
 	fixed="yes"
 

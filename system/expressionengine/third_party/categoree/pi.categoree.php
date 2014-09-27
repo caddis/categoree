@@ -2,7 +2,7 @@
 
 $plugin_info = array (
 	'pi_name' => 'Categoree',
-	'pi_version' => '1.1.0',
+	'pi_version' => '1.2.0',
 	'pi_author' => 'Caddis (TJ Draper)',
 	'pi_author_url' => 'http://www.caddis.co',
 	'pi_description' => 'Retrieve category data in a sane manner.',
@@ -14,6 +14,7 @@ class Categoree {
 	// Default get_cat_data Options
 	public $model_options = array(
 		'cat_ids' => false,
+		'entry_id' => false,
 		'group_ids' => false,
 		'parent_only' => false,
 		'parent_id' => false,
@@ -25,6 +26,7 @@ class Categoree {
 		ee()->load->model('categoree_model');
 
 		$this->cat_ids = ee()->TMPL->fetch_param('show');
+		$this->entry_id = ee()->TMPL->fetch_param('entry_id');
 		$this->field = ee()->TMPL->fetch_param('field', 'category_name');
 		$this->group = ee()->TMPL->fetch_param('group');
 		$this->parent_only = ee()->TMPL->fetch_param('parent_only');
@@ -49,7 +51,8 @@ class Categoree {
 			'category_parent_id'
 		);
 
-		if (empty($this->cat_ids) or ! in_array($this->field, $allowed_fields)) {
+		if (empty($this->cat_ids) or ! in_array($this->field, $allowed_fields))
+		{
 			return;
 		}
 
@@ -80,6 +83,10 @@ class Categoree {
 			$this->model_options['cat_ids'] = $this->cat_ids;
 		}
 
+		if (! empty($this->entry_id)) {
+			$this->model_options['entry_id'] = $this->entry_id;
+		}
+
 		if (! empty($this->group)) {
 			$this->model_options['group_ids'] = $this->group;
 		}
@@ -99,7 +106,9 @@ class Categoree {
 		if (! empty($this->nest) and empty($this->parent_only)) {
 			$cat_data = $this->_nest_cats($cat_data, $this->nest);
 		} else if ($this->fixed === 'yes' and ! empty($this->cat_ids)) {
-			$cat_data = $this->_fixed_order($cat_data, explode('|', $this->cat_ids));
+			$cat_data = $this->_fixed_order(
+				$cat_data, explode('|', $this->cat_ids)
+			);
 		}
 
 		// Namespace tags if parameter is set
@@ -211,7 +220,8 @@ class Categoree {
 			// Go through each of the categories left in the category array
 			foreach ($cat_data as $cat_key => $cat_value) {
 				// If it matches a parent, build it into the array
-				if ($cat_value['category_parent_id'] == $nested_value['category_id']) {
+				if ($cat_value['category_parent_id']
+						== $nested_value['category_id']) {
 					$level_count++;
 
 					$cat_value['level'] = $level;
@@ -249,7 +259,8 @@ class Categoree {
 				($nested_key + 1) + ($previous_level_count)
 			);
 
-			// Remember how many were in the previous level so we know where to insert the next level
+			// Remember how many were in the previous level so we know where to
+			// insert the next level
 			$previous_level_count = $level_count + $previous_level_count;
 
 			// Reset variables
@@ -262,7 +273,9 @@ class Categoree {
 		// If the categories are not empty, and nest param is great than current
 		// level, recursions is
 		if (! empty($cat_data) and $nest > $level) {
-			$nested_cats = $this->_recursive_nesting($nested_cats, $cat_data, $level, $nest);
+			$nested_cats = $this->_recursive_nesting(
+				$nested_cats, $cat_data, $level, $nest
+			);
 		}
 
 		return $nested_cats;

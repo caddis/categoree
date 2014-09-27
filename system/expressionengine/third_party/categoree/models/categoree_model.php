@@ -4,7 +4,7 @@
  * Categoree Model
  *
  * @package Categoree
- * @author  Caddis
+ * @author  Caddis (TJ Draper)
  * @link    http://www.caddis.co
  */
 
@@ -25,34 +25,40 @@ class Categoree_model extends CI_Model {
 	{
 		ee()->db
 			->select('
-				cat_id,
-				cat_name,
-				cat_url_title,
-				cat_description,
-				parent_id
-				')
-			->from('categories');
+				C.cat_id,
+				C.cat_name,
+				C.cat_url_title,
+				C.cat_description,
+				C.parent_id
+			')
+			->from('categories C');
 
 		if (! empty($model_options['cat_ids'])) {
 			$cat_ids = explode('|', $model_options['cat_ids']);
-			ee()->db->where_in('cat_id', $cat_ids);
+			ee()->db->where_in('C.cat_id', $cat_ids);
 		}
 
 		if (! empty($model_options['group_ids'])) {
 			$group_ids = explode('|', $model_options['group_ids']);
-			ee()->db->where_in('group_id', $group_ids);
+			ee()->db->where_in('C.group_id', $group_ids);
 		}
 
 		if ($model_options['parent_only'] === 'yes') {
-			ee()->db->where('parent_id', 0);
+			ee()->db->where('C.parent_id', 0);
 		}
 
 		if (! empty($model_options['parent_id'])) {
-			ee()->db->where('parent_id', $model_options['parent_id']);
+			ee()->db->where('C.parent_id', $model_options['parent_id']);
 		}
 
 		if (! empty($model_options['limit'])) {
 			ee()->db->limit($model_options['limit']);
+		}
+
+		if (! empty($model_options['entry_id'])) {
+			ee()->db
+				->join('category_posts CP', 'C.cat_id = CP.cat_id')
+				->where('CP.entry_id', $model_options['entry_id']);
 		}
 
 		$query = ee()->db
