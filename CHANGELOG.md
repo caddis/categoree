@@ -2,7 +2,7 @@
 
 2014-09-27
 
-- Added new `entry_id=` parameter to tag pair for retrive the categories of a given entry ID
+- Added new `entry_id=` parameter to tag pair for retrieving the categories of a given entry ID
 
 # 1.1.0
 
