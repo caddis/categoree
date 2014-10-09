@@ -51,8 +51,7 @@ class Categoree {
 			'category_parent_id'
 		);
 
-		if (empty($this->cat_ids) or ! in_array($this->field, $allowed_fields))
-		{
+		if (empty($this->cat_ids) or ! in_array($this->field, $allowed_fields)) {
 			return;
 		}
 
